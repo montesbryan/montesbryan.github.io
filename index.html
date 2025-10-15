@@ -1,76 +1,293 @@
+Ya me cansaron con sus comentarios necios de que es "imposible" alterar la procedencia de un enlace en archive.li y que en archive.li "se muestre" que la captura proviene de x.com/jpvel/status/........
+Demostremos con alto rigor tecnico que si es posible y lo haremos para "silenciar" a personajes con cuentas falsas en rrss, trolls que no entenderán aunque sigamos presentando mas y mas casos de vulnerabilidades reales y documentadas.
+Hagamoslo de forma profesional, ya tengo el siguiente codigo html en github donde simulamos la replicacion de una pagina de x.com como muestra, ahora lo que necesitamos es inyectar al codigo con cualquier artilugio de programacion que tu sugieras para que cuando archivemos en archive.li a captura del tuit "recreado" muestre como si estuviese viniendo de x.com/jpvel/status/ID, demostrando con claridad de que si es posible hacerlo.
+Este es el enlace del tuit experimental:
+https://montesbryan.github.io/
+Y este es el codigo html alojado en github: index.html
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Juan Pablo Velasco on X: "¡ESTE MENSAJE ES FALSO!"</title>
-  <meta property="og:url" content="https://x.com/Jpvel/status/984000000000000">
-  <meta property="og:title" content="Juan Pablo Velasco on X">
-  <meta property="og:description" content="¡ESTE MENSAJE ES FALSO Y FUE CREADO PARA DEMOSTRAR MANIPULACIÓN DIGITAL!">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-    window.history.pushState({}, '', 'https://x.com/Jpvel/status/984000000000000');
-  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulación - Interfaz de X</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #fff;
+      color: #0f1419;
+      line-height: 1.4;
+    }
+    .app {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    /* Sidebar izquierda */
+    .sidebar-left {
+      width: 275px;
+      padding: 12px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      border-right: 1px solid #e6e6e6;
+      background: white;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      padding: 16px 24px;
+      color: #0f1419;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      color: #0f1419;
+      font-size: 18px;
+      text-decoration: none;
+      width: 100%;
+      border-radius: 0 24px 24px 0;
+    }
+    .nav-item:hover {
+      background: #f7f9f9;
+    }
+    .nav-item span {
+      margin-left: 16px;
+      font-weight: 600;
+    }
+    .tweet-btn {
+      background: #0f1419;
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 14px 0;
+      margin: 16px 24px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      width: calc(100% - 48px);
+    }
+    /* Contenido central */
+    .main-content {
+      flex: 1;
+      margin-left: 275px;
+      margin-right: 350px;
+      border-left: 1px solid #e6e6e6;
+      border-right: 1px solid #e6e6e6;
+      min-height: 100vh;
     }
     .header {
-      background-color: #1da1f2;
+      padding: 16px;
+      font-size: 20px;
+      font-weight: 700;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    .tweet-container {
+      padding: 16px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    .tweet-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1d9bf0, #0d76bf);
       color: white;
-      padding: 10px;
-      font-size: 18px;
-    }
-    .tweet-box {
-      padding: 20px;
-      border-bottom: 1px solid #ccc;
-    }
-    .username {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: bold;
+      font-size: 18px;
+      margin-right: 12px;
     }
-    .handle {
-      color: gray;
+    .user-info .display-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: #0f1419;
     }
-    .timestamp {
-      color: gray;
+    .user-info .username {
+      color: #657786;
+      font-size: 15px;
+    }
+    .tweet-text {
+      font-size: 23px;
+      line-height: 1.35;
+      margin: 8px 0;
+      color: #e0245e;
+    }
+    .meta {
+      color: #657786;
+      font-size: 15px;
+      margin-top: 8px;
+    }
+    /* Sidebar derecha */
+    .sidebar-right {
+      width: 350px;
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: 100vh;
+      padding: 16px;
+      background: white;
+      border-left: 1px solid #e6e6e6;
+    }
+    .search-box {
+      background: #f7f9f9;
+      border-radius: 20px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      width: 100%;
+      border: none;
+    }
+    .trend-card {
+      background: #f7f9f9;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .trend-card h3 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #0f1419;
+    }
+    .trend {
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+    .trend-category {
+      color: #657786;
       font-size: 14px;
     }
-    .warning {
-      background-color: #fff3cd;
-      color: #856404;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ffeeba;
+    /* Advertencia educativa */
+    .disclaimer {
+      background-color: #fff8e1;
+      border-left: 4px solid #ffc107;
+      padding: 16px;
+      margin: 24px;
+      border-radius: 0 8px 8px 0;
+      font-size: 15px;
+      position: relative;
+      z-index: 10;
     }
-    .footer {
-      font-size: 12px;
-      color: gray;
-      padding: 10px;
-      border-top: 1px solid #ccc;
+    .disclaimer strong {
+      color: #ff6f00;
+    }
+    .footer-note {
+      font-size: 13px;
+      color: #657786;
+      margin-top: 10px;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
-  <div class="header">X</div>
 
-  <div class="tweet-box">
-    <div class="username">Juan Pablo Velasco</div>
-    <div class="handle">@Jpvel</div>
-    <p>¡ESTE MENSAJE ES FALSO Y FUE CREADO PARA DEMOSTRAR MANIPULACIÓN DIGITAL!</p>
-    <div class="timestamp">6:46 PM · 6 nov. 2010</div>
-    <div class="warning">
-      ⚠️ SIMULACIÓN EDUCATIVA – NO ES UN TUIT REAL<br>
-      Esta página imita la interfaz de X con fines exclusivamente educativos para demostrar que:<br>
-      • Cualquiera puede recrear visualmente una “prueba falsa”,<br>
-      • Plataformas como archive.today NO verifican autenticidad,<br>
-      • Y una transmisión en vivo no equivale a evidencia forense.
+  <div class="app">
+    <!-- Sidebar izquierda -->
+    <div class="sidebar-left">
+      <div class="logo">X</div>
+      <a href="#" class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10.5 19.5L3 12l7.5-7.5 1.5 1.5-6 6 6 6-1.5 1.5z"/>
+        </svg>
+        <span>Inicio</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 2.34 1.08 4.38 2.7 5.7L7 17l1.5-1.5C9.92 16.42 11.96 17.5 14 17.5c3.87 0 7-3.13 7-7s-3.13-7-7-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+        </svg>
+        <span>Explorar</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+        </svg>
+        <span>Notificaciones</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+        </svg>
+        <span>Mensajes</span>
+      </a>
+      <button class="tweet-btn">Publicar</button>
+    </div>
+
+    <!-- Contenido central -->
+    <div class="main-content">
+      <div class="header">Inicio</div>
+
+      <div class="tweet-container">
+        <div class="tweet-header">
+          <div class="avatar">JP</div>
+          <div class="user-info">
+            <div class="display-name">Juan Pablo Velasco</div>
+            <div class="username">@Jpvel</div>
+          </div>
+        </div>
+        <div class="tweet-text">
+          ¡ESTE MENSAJE ES FALSO Y FUE CREADO PARA DEMOSTRAR MANIPULACIÓN DIGITAL!
+        </div>
+        <div class="meta">• 21 de noviembre de 2010</div>
+      </div>
+
+      <div class="disclaimer">
+        <strong>⚠️ SIMULACIÓN EDUCATIVA – NO ES UN TUIT REAL</strong><br><br>
+        Esta página imita la interfaz de X con fines exclusivamente educativos para demostrar que:<br>
+        • Cualquiera puede recrear visualmente una “prueba falsa”,<br>
+        • Plataformas como <strong>archive.today NO verifican autenticidad</strong>,<br>
+        • Y una transmisión en vivo <strong>no equivale a evidencia forense</strong>.<br><br>
+        El objetivo es promover verificación rigurosa en contextos electorales.
+      </div>
+
+      <div class="footer-note">
+        Dominio: montesbryan.github.io — Simulación generada el 1 de octubre de 2025.
+      </div>
+    </div>
+
+    <!-- Sidebar derecha -->
+    <div class="sidebar-right">
+      <input type="text" class="search-box" placeholder="Buscar en X" disabled />
+      
+      <div class="trend-card">
+        <h3>Qué está pasando</h3>
+        <div class="trend">
+          <div class="trend-category">Tendencia en Bolivia</div>
+          <div><strong>#EleccionesBolivia</strong></div>
+        </div>
+        <div class="trend">
+          <div class="trend-category">Actualidad</div>
+          <div><strong>Verificación digital</strong></div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <h3>Sugerido para ti</h3>
+        <div style="display: flex; align-items: center; margin-bottom: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #1d9bf0; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; margin-right: 10px;">F</div>
+          <div>
+            <div style="font-weight: 600; font-size: 14px;">FactCheck Bolivia</div>
+            <div style="color: #657786; font-size: 13px;">@factcheck_bo</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="footer">
-    Dominio: montesbryan.github.io — Simulación generada el 15 de octubre de 2025.
-  </div>
 </body>
 </html>
